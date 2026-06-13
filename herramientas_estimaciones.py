@@ -13,13 +13,13 @@ def generar_intervalo_de_confianza(media, scuad, alpha, n):
     return intervalo
 
 
-def estimar_media_muestral(programa, d, T):
-    res = programa(T)
+def estimar_media_muestral(programa, d, N):
+    res = programa(N)
     media = np.mean(res[6])
     scuad, n = 0, 1
     while n < 100 or np.sqrt(scuad / n) > d:
         n += 1
-        res = programa(T)
+        res = programa(N)
         nueva = np.mean(res[6])
         mediaAnt = media
         media = mediaAnt + (nueva - mediaAnt) / n
@@ -28,11 +28,11 @@ def estimar_media_muestral(programa, d, T):
     return media, scuad, n
 
 
-def estimador_p(programa, d, T):
+def estimador_p(programa, d, N):
     p, n = 0, 0
     while n <= 100 or np.sqrt(p * (1 - p) / n) > d:
         n += 1
-        res = programa(T)
+        res = programa(N)
         temp = np.array(res[3])
         X = np.sum(temp > T)
         if X > 0:
@@ -41,9 +41,17 @@ def estimador_p(programa, d, T):
 
     return p
 
+def prob_esperar_mas_de_x(tiempos, x_minutos):
+    x_horas = x_minutos / 60.0
+    arr_tiempos = np.array(tiempos)
+
+    p = np.mean(arr_tiempos > x_horas)
+
+    return p
+
 
 print("====/ Ejercicio 1b /====")
-media, scuad, simulaciones = estimar_media_muestral(programa, 0.1, 100)
+media, scuad, simulaciones = estimar_media_muestral(programa, 0.1, 10000)
 print(f"El tiempo promedio de permanencia es: {media:.4f}")
 intervalo = generar_intervalo_de_confianza(media, scuad, 0.05, simulaciones)
 print(
