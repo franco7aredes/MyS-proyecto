@@ -53,7 +53,7 @@ def programa(T=16):
             if tA > T:
                 tA = float('inf')
             if n1 == 1:
-                Y1 = np.random.exponential(1 / 4)
+                Y1 = np.random.exponential(4 / 60)
                 t1 = t + Y1
 
         # Fin de servicio en Recepción
@@ -67,12 +67,13 @@ def programa(T=16):
             if n1 == 0:
                 t1 = float('inf')
             else:
-                Y1 = np.random.exponential(1 / 4)
+                Y1 = np.random.exponential(4 / 60)
                 t1 = t + Y1
             n2 += 1
             reg_n2.append(n2)
             if n2 == 1:
-                Y2 = np.random.exponential(1 / 6)
+                # la media es de 6 min, tiene que estar en hs
+                Y2 = np.random.exponential(0.1)
                 t2 = t + Y2
 
         # Fin de servicio en Validación
@@ -91,7 +92,7 @@ def programa(T=16):
             if n2 == 0:
                 t2 = float('inf')
             else:
-                Y2 = np.random.exponential(1 / 6)
+                Y2 = np.random.exponential(0.1)
                 t2 = t + Y2
 
     return (
