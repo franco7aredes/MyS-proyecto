@@ -102,7 +102,6 @@ def programa_prioritarios(N=10000):
             # vemos los datos del cliente que acaba de terminar
             t_llegada_orig, tipo_orig, t_salida_rec = cliente_en_validacion
 
-            primero = t_salida_recepcion.pop(0)
             t_validacion.append(t - t_salida_rec)
             t_salidas.append(t)
             reg_n2.append(n2)
