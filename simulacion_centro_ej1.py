@@ -6,25 +6,21 @@ def lambda_t(t):
     return 8 + 4 * np.sin(np.pi * t / 12)
 
 
-def generar_llegada_poisson(t_actual, T_max):
+def generar_llegada_poisson(t_actual):
     lambda_max = 12
     t_aux = t_actual
     while True:
         U1 = 1 - random()
         t_aux = t_aux - np.log(U1) / lambda_max
-        if t_aux > T_max:
-            return float('inf')
         U2 = 1 - random()
         if U2 <= lambda_t(t_aux) / lambda_max:
             return t_aux
 
-# fijarse lo del T, si corresponde
 
-
-def programa(T=16):
+def programa(N=10000):
     t, NA, ND = 0, 0, 0
     n1, n2 = 0, 0
-    t0 = generar_llegada_poisson(t, T)
+    t0 = generar_llegada_poisson(t)
     tA = t0
     t1, t2 = float('inf'), float('inf')
 
@@ -48,10 +44,12 @@ def programa(T=16):
             n1 += 1
             t_llegadas.append(t)
             t_llegada_sistema.append(t)
-            tA = generar_llegada_poisson(t, T)
-            reg_n1.append(n1)
-            if tA > T:
+            # voy a cortar la llegada de clientes cuando llegue a N
+            if NA < N:
+                tA = generar_llegada_poisson(t)
+            else:
                 tA = float('inf')
+            reg_n1.append(n1)
             if n1 == 1:
                 Y1 = np.random.exponential(4 / 60)
                 t1 = t + Y1
@@ -84,7 +82,7 @@ def programa(T=16):
             primero = t_salida_recepcion.pop(0)
             t_validacion.append(t - primero)
             t_salidas.append(t)
-            reg_n1.append(n1)
+            reg_n2.append(n2)
 
             # Registramos el tiempo total en el sistema
             llegada = t_llegada_sistema.pop(0)
