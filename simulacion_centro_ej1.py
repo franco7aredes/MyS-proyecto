@@ -2,14 +2,10 @@ from random import random
 import numpy as np
 
 def lambda_t(t):
-    tau = t % 8
-    if 0 <= tau <= 4:
-        return 2.5 * tau + 4
-    else:
-        return 24 - 2.5 * tau
+    return 8 + 4 * np.sin( np.pi * t / 12 )
 
 def generar_llegada_poisson(t_actual,T_max):
-    lambda_max = 14
+    lambda_max = 12
     t_aux = t_actual
     while True:
         U1 = 1 - random()
@@ -20,6 +16,7 @@ def generar_llegada_poisson(t_actual,T_max):
         if U2 <= lambda_t(t_aux) / lambda_max:
             return t_aux
 
+# fijarse lo del T, si corresponde
 def programa(T= 16):
     t, NA, ND = 0, 0, 0
     n1, n2 = 0, 0
@@ -48,6 +45,7 @@ def programa(T= 16):
             if tA > T:
                 tA = float('inf')
             if n1 == 1:
+                # corregir aca de acuerdo al enunciado
                 # Y1 es el tiempo de atencion en admision
                 Y1 = np.random.exponential( 1 / 15)
                 t1 = t + Y1
@@ -62,11 +60,13 @@ def programa(T= 16):
             if n1 = 0:
                 t1 = float('inf')
             else:
+                # corregir acá
                 Y1 = np.random.exponential( 1 / 15)
                 t1 = t + Y1
             n2 += 1
             reg_n2.append(n2)
             if n2 == 1:
+                # corregir acá
                 Y2 = np.random.exponential( 1 / 12)
                 t2 = t + Y2
 
@@ -83,41 +83,16 @@ def programa(T= 16):
             if n2 == 0:
                 t2 = float('inf')
             else:
+                # corregir acá
                 Y2 = np.random.exponential( 1 / 12)
                 t2 = t + Y2
 
-    return {
-        't_llegadas': t_llegadas
-        't_atencion': t_atencion
-        't_imagen': t_imagen
-        't_salidas': t_salidas
-        'reg_n1': reg_n1
-        'reg_n2': reg_n2
-    }
+    return (
+        t_llegadas,
+        t_atencion,
+        t_imagen,
+        t_salidas,
+        reg_n1,
+        reg_n2
+    )
 
-def media_muestral_x_b(programa, d, T):
-    res = programa(T)
-    media = np.mean(res['t_imagen'])
-    scuad, n = 0, 1
-    while n <= 100 or np.sqrt(scuad / n) > d:
-        n += 1
-        res = programa(T)
-        nueva = np.mean(res['t_imagen'])
-        mediaAnt = media
-        media = mediaAnt + ( nueva - mediaAnt) / n
-        scuad = scuad * ( 1 - 1(n-1)) + n * (media - mediaAnt) ** 2
-
-    return media
-
-def estimador_p(programa, d, T):
-    p, n = 0 , 0
-    while n <= 100 or np.sqrt(p * ( 1 - p ) / n ) > d:
-        n += 1
-        res = programa(T)
-        temp = np.array(res['t_salidas'])
-        X = np.sum(temp > T)
-        if X > 0:
-            X = 1
-        p = p + (X - p) / n
-
-    return p
