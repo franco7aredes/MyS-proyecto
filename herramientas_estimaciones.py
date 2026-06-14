@@ -1,9 +1,6 @@
 import numpy as np
 from scipy import stats
 
-from simulacion_centro_ej1 import programa
-from simulacion_centro_prioritarios import programa_prioritarios
-
 
 def generar_intervalo_de_confianza(media, scuad, alpha, n):
     z_alpha_2 = stats.norm.ppf(1-alpha/2)
