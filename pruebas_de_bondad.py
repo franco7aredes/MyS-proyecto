@@ -41,3 +41,5 @@ def prueba_bondad_ajuste(tiempos_permanencia):
     _, pval_log = stats.chisquare(f_obs=obs, f_exp=esp_log, ddof=2)
 
     return pval_exp, pval_log
+
+

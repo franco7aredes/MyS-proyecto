@@ -30,7 +30,6 @@ def programa_prioritarios(N=10000):
     cola2_N = []
     cliente_en_validacion = None
 
-
     t_llegadas = []
     t_recepcion = []
     t_validacion = []
@@ -122,9 +121,8 @@ def programa_prioritarios(N=10000):
                 Y2 = np.random.exponential(0.1)
                 t2 = t + Y2
             else:
-                t2 = fliat('inf')
+                t2 = float('inf')
                 cliente_en_validacion = None
-
 
     return (
         t_llegadas,
